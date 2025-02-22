@@ -1,0 +1,16 @@
+{
+    "name": "NiceLogger.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:dd09e0c915e6a68468b26bf594f382c2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
