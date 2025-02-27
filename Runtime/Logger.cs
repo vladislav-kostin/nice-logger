@@ -1,53 +1,41 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using NiceLogger;
 using UnityEngine;
-using VK.Logger;
 using Debug = UnityEngine.Debug;
+using Object = UnityEngine.Object;
 
 public static class Logger
 {
-	// private static string ColorWhite = "#FFFFFF";
-	// private static readonly string ColorBlue = "#3498DB";
-	// private static string ColorTeal = "#1ABC9C";
-	// private static readonly string ColorGold = "#F1C40F";
-	// private static readonly string ColorRed = "#E74C3C";
-	// private static readonly string ColorOrange = "#DC7633";
-	// private static readonly string ColorGrey = "#7F8C8D";
-
 	private static LoggerSettingsData Settings => LoggerSettings.Settings;
 
-	public static void LogDebug(object message = null)
+	public static void LogTemp(object message = null, Object context = null)
 	{
-		var logMessage = FormatMessage("DEBUG", message, Settings.DebugColor);
-		Debug.Log(logMessage);
+		Debug.Log(FormatMessage("TEMP", message, Settings.TempPrefixColor, Settings.TempMessageColor), context);
 	}
 
-	public static void LogImportant(object message = null)
+	public static void LogImportant(object message = null, Object context = null)
 	{
-		var logMessage = FormatMessage("IMPORTANT", message, Settings.ImportantColor);
-		Debug.Log(logMessage);
+		Debug.Log(FormatMessage("IMPORTANT", message, Settings.ImportantPrefixColor, Settings.RegularMessageColor), context);
 	}
 
-	public static void LogError(object message = null)
+	public static void LogError(object message = null, Object context = null)
 	{
-		var logMessage = FormatMessage("ERROR", message, Settings.ErrorColor);
-		Debug.LogError(logMessage);
+		Debug.LogError(FormatMessage("ERROR", message, Settings.ErrorPrefixColor, Settings.RegularMessageColor), context);
 	}
 
-	public static void LogWarning(object message = null)
+	public static void LogWarning(object message = null, Object context = null)
 	{
-		var logMessage = FormatMessage("WARNING", message, Settings.WarningColor);
-		Debug.LogWarning(logMessage);
+		Debug.LogWarning(FormatMessage("WARNING", message, Settings.WarningPrefixColor, Settings.RegularMessageColor), context);
 	}
 
-	public static void Assert(bool expression, object message = null)
+	public static void Assert(bool expression, object message = null, Object context = null)
 	{
-		var logMessage = FormatMessage("ERROR", message, Settings.ErrorColor);
-		Debug.Assert(expression, $"Assertion failed: {logMessage}");
+		Debug.Assert(expression, FormatMessage("ASSERTION FAILED", message, Settings.ErrorPrefixColor, Settings.RegularMessageColor), context);
 	}
 
-	private static string FormatMessage(string prefix, object message, Color prefixColor)
+	public static string FormatMessage(string prefix, object message, Color prefixColor, Color messageColor)
 	{
 		var callingMethod = GetCallingMethod();
 		var className = GetActualClassName(callingMethod) ?? "UnknownClass";
@@ -55,9 +43,9 @@ public static class Logger
 		var lineNumber = GetLineNumber(callingMethod);
 		var formattedMessage = ColorizeSquareBracketsContent(message?.ToString(), Settings.HighlightColor);
 		var prefixColorHex = $"#{ColorUtility.ToHtmlStringRGBA(prefixColor)}";
-		var regularColorHex = $"#{ColorUtility.ToHtmlStringRGBA(Settings.RegularColor)}";
+		var regularColorHex = $"#{ColorUtility.ToHtmlStringRGBA(messageColor)}";
 		var metadataColorHex = $"#{ColorUtility.ToHtmlStringRGBA(Settings.MetadataColor)}";
-		return $"<color={prefixColorHex}>[{prefix}]</color> <color={metadataColorHex}>({className}.{methodName}:{lineNumber})</color> <color={regularColorHex}>{formattedMessage}</color>";
+		return $"<color={prefixColorHex}>[{prefix}]</color> <color={metadataColorHex}>[{className}.{methodName}:{lineNumber}]</color> <color={regularColorHex}>{formattedMessage}</color>";
 	}
 
 	private static MethodBase GetCallingMethod()
@@ -104,7 +92,6 @@ public static class Logger
 		var stackTrace = new StackTrace(true);
 		var frames = stackTrace.GetFrames();
 
-		// Find the frame corresponding to the calling method
 		for (var i = 0; i < frames.Length; i++)
 		{
 			var frame = frames[i];
@@ -114,13 +101,12 @@ public static class Logger
 			}
 		}
 
-		return -1; // Line number not found
+		return -1;
 	}
 
 	private static bool IsFrameFromCallingMethod(StackFrame frame, MethodBase method)
 	{
 		var frameMethod = frame.GetMethod();
-
 		return frameMethod != null && frameMethod == method;
 	}
 

@@ -1,59 +1,13 @@
 # Nice Dependency Injection Package
 
-## WARNING
-
-This is a very early version tested only on a single scene setup with MonoBehaviors.  
-
 ## Description
 
-This package provides minimal setup dependency injection for MonoBehavior scripts. All you need is `[Inject]` attribute on a class or a field. No installation, no interfaces.  
+This logger displayes a clear prefix in front of a message, line number and file name, and then the message with highlights. The log message is clickable and will take you to the correct line.
+
+One of the reasons to have prefixes is to disallow team members to commit temporary debug logs, so that logs remain clean and clear for everyone. Currently `Logger.LogDebug("message")` is intended as that temp log type. You can setup git commit hooks to block commits with those.
 
 ## Usage
 
-Add `[Inject]` attribute to a MonoBehavior-based class declaration for it to be injected into any field of that type in other MonoBehavior scripts with `[Inject]` attributes. The attribute is inherited.  
-
-The injection is initialized right after scene load, after all `Awake` methods and before all `Start` methods. The classes that are being injected are currently expected to be in the scene when the injection happens.  
-
-If the object is spawned dynamically, it needs a `DependencyInjection` attribute.  
-
-## Example
-
-```csharp
-using UnityEngine;
-
-[Inject]
-public class PlayerService : MonoBehaviour
-{
-    public void Initialize()
-    {
-        Debug.Log("PlayerService initialized!");
-    }
-}
-```
-
-```csharp
-using UnityEngine;
-
-public class GameManager : MonoBehaviour
-{
-    [Inject]
-    private PlayerService _playerService;
-
-    private void Start()
-    {
-        if (_playerService != null)
-        {
-            _playerService.Initialize();
-            Debug.Log("PlayerService injected successfully!");
-        }
-        else
-        {
-            Debug.LogError("PlayerService was not injected!");
-        }
-    }
-}
-```
-
-## Limitations
-- Not optimized for large scenes with a lot of preexisting prefab instances with a lot of scripts.  
-- Only injects into fields. I can't come up with a use case for properties, and you can inject auto-properties by applying the attribute to the backing field `[field: Inject]`.  
+- You can use following methods: `Logger.LogDebug("message")`,  `Logger.LogWarning("message")`,  `Logger.LogError("message")`, `Logger.Assert("message")`, `Logger.LogImportant("message")`
+- Colors are customisable via ProjectSetting>LoggerSettings
+- Use square brackets to highlight elements: `Logger.LogDebug($"Loaded [{5}] files")`, `Logger.LogDebug("Status: [Initialized]")`

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace VK.Logger
+namespace NiceLogger
 {
 	public static class LoggerSettings
 	{
@@ -47,12 +47,15 @@ namespace VK.Logger
 	[Serializable]
 	public class LoggerSettingsData
 	{
-		public Color RegularColor = new(1f, 1f, 1f);
-		public Color DebugColor = new(.8f, .5f, .2f);
-		public Color WarningColor = new(.8f, .8f, .2f);
-		public Color ErrorColor = new(.8f, .2f, .2f);
-		public Color ImportantColor = new(.2f, .8f, .8f);
+		public Color RegularMessageColor = new(.8f, .8f, .8f);
+		public Color TempMessageColor = new(.8f, .8f, .5f);
+		public Color TempPrefixColor = new(.8f, .5f, .2f);
+		public Color WarningPrefixColor = new(.8f, .8f, .2f);
+		public Color ErrorPrefixColor = new(.8f, .2f, .2f);
+		public Color LogPrefixColor = new(.8f, .8f, .8f);
+		public Color ImportantPrefixColor = new(.2f, .8f, .8f);
 		public Color HighlightColor = new(.5f, .8f, .2f);
 		public Color MetadataColor = new(.5f, .5f, .5f);
+		public bool OverrideDebugClass;
 	}
 }
