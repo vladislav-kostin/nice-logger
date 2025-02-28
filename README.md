@@ -9,7 +9,7 @@ When working on team project people always leave behind no longer needed logs. T
 ## Usage
 
 - You can use following methods:
-  - `Logger.LogDebug("message")`
+  - `Logger.LogTemp("message")`
   - `Logger.LogWarning("message")`
   - `Logger.LogError("message")`
   - `Logger.Assert("message")`
